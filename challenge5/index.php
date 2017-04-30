@@ -27,8 +27,6 @@ var_dump($response);
 
 curl_close($ch);
 
-
-
 fclose($output);
 ?>
 
