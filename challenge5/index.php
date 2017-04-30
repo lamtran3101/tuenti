@@ -8,29 +8,23 @@ define("SUBMIT_FILE", "submitOutput");
 
 include "functions.inc";
 
-$input = fopen(SUBMIT_INPUT_FILE, "r");
 $output = fopen(SUBMIT_FILE, "w");
 
-$line = fgets($input);
-$cases = getNumberOfCases($line);
-$case_index = 0;
+$ch = curl_init();
 
-while (!feof($input)) {
-    $line = fgets($input);
-    if(isBlankLine($line)) break;
-    $case_index++;
+curl_setopt($ch, CURLOPT_URL,"https://52.9.91.111:8443/ghost");
 
-    $lengths = getListLength($line);
-    $sides = $lengths[0];
-    array_shift($lengths);
-    
-    $minimumPerimeter = getMinimumPerimeter($lengths, $sides);
+// in real life you should use something like:
+// curl_setopt($ch, CURLOPT_POSTFIELDS, 
+//          http_build_query(array('postvar1' => 'value1')));
 
-    $text = "Case #".$case_index.": ".$minimumPerimeter."\n";
-    fwrite($output, $text);
-}
+// receive server response ...
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-fclose($input);
+$server_output = curl_exec ($ch);
+var_dump($server_output);
+curl_close ($ch);
+
 fclose($output);
 ?>
 
