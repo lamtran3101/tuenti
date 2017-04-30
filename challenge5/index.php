@@ -10,20 +10,22 @@ include "functions.inc";
 
 $output = fopen(SUBMIT_FILE, "w");
 
+$url = "https://52.49.91.111:8443/ghost";
+// Initialize session and set URL.
 $ch = curl_init();
-
-curl_setopt($ch, CURLOPT_URL,"https://52.9.91.111:8443/ghost");
-
-// in real life you should use something like:
-// curl_setopt($ch, CURLOPT_POSTFIELDS, 
-//          http_build_query(array('postvar1' => 'value1')));
-
-// receive server response ...
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+curl_setopt($ch, CURLOPT_TCP_KEEPALIVE, 1);
+curl_setopt($ch, CURLOPT_TCP_KEEPIDLE, 2);
+// Set so curl_exec returns the result instead of outputting it.
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    
+// Get the response and close the channel.
+$response = curl_exec($ch);
+var_dump($response);
 
-$server_output = curl_exec ($ch);
-var_dump($server_output);
-curl_close ($ch);
+curl_close($ch);
 
 fclose($output);
 ?>
