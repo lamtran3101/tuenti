@@ -8,29 +8,27 @@ define("SUBMIT_FILE", "submitOutput");
 
 include "functions.inc";
 
-$input = fopen(SUBMIT_INPUT_FILE, "r");
 $output = fopen(SUBMIT_FILE, "w");
 
-$line = fgets($input);
-$cases = getNumberOfCases($line);
-$case_index = 0;
-
-while (!feof($input)) {
-    $line = fgets($input);
-    if(isBlankLine($line)) break;
-    $case_index++;
-
-    $lengths = getListLength($line);
-    $sides = $lengths[0];
-    array_shift($lengths);
+$url = "https://52.49.91.111:8443/ghost";
+// Initialize session and set URL.
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array('Expect:'));
+curl_setopt($ch, CURLOPT_TCP_KEEPALIVE, 1);
+curl_setopt($ch, CURLOPT_TCP_KEEPIDLE, 2);
+// Set so curl_exec returns the result instead of outputting it.
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     
-    $minimumPerimeter = getMinimumPerimeter($lengths, $sides);
+// Get the response and close the channel.
+$response = curl_exec($ch);
+var_dump($response);
 
-    $text = "Case #".$case_index.": ".$minimumPerimeter."\n";
-    fwrite($output, $text);
-}
+curl_close($ch);
 
-fclose($input);
+
+
 fclose($output);
 ?>
 
